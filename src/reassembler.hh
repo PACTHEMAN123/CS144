@@ -43,7 +43,7 @@ public:
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
-  uint64_t next_byte{}; // store the next byte's index
+  uint64_t next_byte{}; // store the next byte's index aka. first unassembled index
   class substring
   {
     public:
@@ -54,5 +54,6 @@ private:
   std::list<substring> substrings{};
   uint64_t unaccept_index(); // return the first unacceptable byte index 
   uint64_t unpopped_index(); // return the first unpopped byte index
-  void update(); // scan the area and push all continous bytes in bytestream
+  uint64_t finish_index = 0xfffffffff;
+  void update(substring &st); // scan the area and push all continous bytes in bytestream
 };
