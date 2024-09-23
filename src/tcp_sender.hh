@@ -48,4 +48,17 @@ private:
   ByteStream input_;
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
+  uint64_t RTO_ {initial_RTO_ms_};
+  uint64_t next_seqno_ {};
+  bool is_retry_ {false};
+  uint64_t retrans_times_ {};
+  bool has_send_SYN {false};
+  bool has_send_FIN {false};
+  uint64_t window_size_ {1};
+  std::list<TCPSenderMessage> segments {};
+  struct retransmission_timer {
+    bool has_on {false};
+    uint64_t t {};
+    uint64_t expire_time;
+  } alarm;
 };
