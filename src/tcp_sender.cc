@@ -76,7 +76,7 @@ void TCPSender::push( const TransmitFunction& transmit )
     return;
   }
 
-  cout << "sz: " << sz << " bufsz: " << input_.reader().bytes_buffered() << endl;
+  //cout << "sz: " << sz << " bufsz: " << input_.reader().bytes_buffered() << endl;
   while(sz > 0 && input_.reader().bytes_buffered()){
     TCPSenderMessage t;
     uint64_t bufsz = input_.reader().bytes_buffered();
