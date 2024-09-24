@@ -1,4 +1,4 @@
-#include "socket.hh"
+#include "tcp_minnow_socket.hh"
 
 #include <cstdlib>
 #include <iostream>
@@ -10,7 +10,7 @@ using namespace std;
 void get_URL( const string& host, const string& path )
 {
   //cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
-  TCPSocket tcp_socket;
+  CS144TCPSocket tcp_socket;
   const Address host_addr(host, "http");
   
   tcp_socket.connect(host_addr);
