@@ -119,8 +119,6 @@ void TCPSender::push( const TransmitFunction& transmit )
       if(t.FIN)
         has_send_FIN = true;
       segments.push_back(t);
-      if(window_size_ == 0)
-        is_retry_ = true;
     }
       
     
@@ -190,10 +188,6 @@ void TCPSender::receive( const TCPReceiverMessage& msg )
   }
   
   window_size_ = msg.window_size;
-  if(window_size_)
-    is_retry_ = false;
-
-  
 }
 
 void TCPSender::tick( uint64_t ms_since_last_tick, const TransmitFunction& transmit )
@@ -208,7 +202,7 @@ void TCPSender::tick( uint64_t ms_since_last_tick, const TransmitFunction& trans
     retrans_times_ += 1;
     transmit(segments.front());
     alarm.t = 0;
-    if(!is_retry_)
+    if(window_size_)
       RTO_ *= 2;
     alarm.expire_time = RTO_;
   }
