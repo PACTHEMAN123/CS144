@@ -44,6 +44,12 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
     if(ip_request_.find(next_hop.ipv4_numeric()) != ip_request_.end())
       return;
 
+    dgram_buffered d;
+    d.dgram = dgram;
+    d.ip = next_hop.ipv4_numeric();
+    datagrams_buffered_.push_back(d);
+    ip_request_.insert({next_hop.ipv4_numeric(), 0});
+
     ARPMessage arp;
     arp.opcode = ARPMessage::OPCODE_REQUEST;
     arp.sender_ip_address = ip_address_.ipv4_numeric();
@@ -60,11 +66,7 @@ void NetworkInterface::send_datagram( const InternetDatagram& dgram, const Addre
     frame.payload = serialize(arp);
     transmit(frame);
 
-    dgram_buffered d;
-    d.dgram = dgram;
-    d.ip = next_hop.ipv4_numeric();
-    datagrams_buffered_.push_back(d);
-    ip_request_.insert({next_hop.ipv4_numeric(), 0});
+    
   }
 }
 
@@ -99,8 +101,11 @@ void NetworkInterface::recv_frame( const EthernetFrame& frame )
 
   if(frame.header.type == EthernetHeader::TYPE_IPv4) {
     InternetDatagram dgram;
-    if(parse(dgram, frame.payload))
+    if(parse(dgram, frame.payload)){
+      cerr << "push dgram into queue\n" << endl;
       datagrams_received_.push(dgram);
+    }
+    return;
   }
 
   if(frame.header.type == EthernetHeader::TYPE_ARP) {
