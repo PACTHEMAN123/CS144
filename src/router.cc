@@ -54,7 +54,7 @@ void Router::route()
 
         uint32_t prefix1 = (dst >> (32 - e.prefix_length)) << (32 - e.prefix_length);
         uint32_t prefix2 = (e.route_prefix >> (32 - e.prefix_length)) << (32 - e.prefix_length);
-        cerr << "prefix1 : " << Address::from_ipv4_numeric( prefix1 ).ip() << "/" << static_cast<int>( e.prefix_length )<< " prefix2 : " << Address::from_ipv4_numeric( prefix2 ).ip()  << "/" << static_cast<int>( e.prefix_length ) << "\n";
+        
         if(prefix1 == prefix2) {
           // among the match, choose the longest-prefix-match route
           if(e.prefix_length > longest_length) {

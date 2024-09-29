@@ -102,7 +102,6 @@ void NetworkInterface::recv_frame( const EthernetFrame& frame )
   if(frame.header.type == EthernetHeader::TYPE_IPv4) {
     InternetDatagram dgram;
     if(parse(dgram, frame.payload)){
-      cerr << "push dgram into queue\n" << endl;
       datagrams_received_.push(dgram);
     }
     return;
