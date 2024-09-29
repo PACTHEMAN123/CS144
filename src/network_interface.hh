@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <unordered_map>
 
 #include "address.hh"
 #include "ethernet_frame.hh"
@@ -81,4 +82,27 @@ private:
 
   // Datagrams that have been received
   std::queue<InternetDatagram> datagrams_received_ {};
+
+  // Mapping between next-hop IP address and Ethernet address
+  // recording entry's exist time, delete entry if exceed 30s
+  struct entry{
+    EthernetAddress eaddr;
+    size_t time;
+  };
+  std::unordered_map<uint32_t, entry> ip_map_ {};
+
+  // Dategrams that wait to be sent
+  struct dgram_buffered{
+    InternetDatagram dgram;
+    uint32_t ip;
+  };
+  std::vector<dgram_buffered> datagrams_buffered_ {};
+
+  // send the buffered datagrams to dst after receive ARP
+  void datagrams_clear( uint32_t dst );
+  
+  // Mapping between request IP and the time the ARP has been sent
+  // if its time exceed 5 seconds, it should be discarded.
+  std::unordered_map<uint32_t, size_t> ip_request_ {};
+  
 };
